@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "piremote/piremote.h"
 
  #include <QtWidgets>
 #include <QtCore>
@@ -39,10 +40,13 @@ void DropArea::dropEvent(QDropEvent *e)
 {
     e->accept();
     e->acceptProposedAction();
-    if(e->mimeData()->hasUrls())
-        qWarning()<<e->mimeData()->urls();
-    if(e->mimeData()->hasText())
+    if(e->mimeData()->hasText()){
         qWarning()<<e->mimeData()->text();
+        PIR->triggerApp("screen", "addWindow", "omxplayer");
+        PIR->triggerApp("screen", "window", "0|stream:"+e->mimeData()->text());
+        PIR->triggerApp("screen", "window", "0|play");
+        PIR->triggerApp("screen","window", "0|togglePause");
+    }
 }
 
 
@@ -56,6 +60,7 @@ void DropArea::mousePressEvent(QMouseEvent *e)
 {
     e->accept();
     qWarning()<<"click";
+    PIR->triggerApp("screen","window", "0|togglePause");
 }
 
 void DropArea::dragEnterEvent(QDragEnterEvent *e)
