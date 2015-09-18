@@ -9,15 +9,38 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+
+    setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
+
     ui->setupUi(this);
     setAcceptDrops(true);
     area = new DropArea();
     ui->centralLayout->addWidget(area);
+
+//    ui->volume->setRange(-6,3);
+//    ui->volume->setTickInterval(1);
+//    ui->volume->setTickPosition(QSlider::TicksLeft);
+//    ui->volume->setSingleStep(1);
+//    ui->volume->setValue(-1);
+    connect(ui->volume, SIGNAL(valueChanged(int)), this, SLOT(setGeneralVolume(int)));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::setGeneralVolume(int v)
+{
+    PIR->triggerApp("screen", "volume", QString().setNum(v));
+}
+
+void MainWindow::toggleShow()
+{
+    if(isVisible())
+        hide();
+    else if(PIR->interface()->isRemoteConnected())
+        show();
 }
 
 DropArea::DropArea(): QFrame()
@@ -32,8 +55,6 @@ DropArea::DropArea(): QFrame()
         QLabel* text = new QLabel("Droppez ici!");
         text->setAlignment(Qt::AlignHCenter);
         layout->addWidget(text);
-
-        grabMouse();
 }
 
 void DropArea::dropEvent(QDropEvent *e)
@@ -42,10 +63,8 @@ void DropArea::dropEvent(QDropEvent *e)
     e->acceptProposedAction();
     if(e->mimeData()->hasText()){
         qWarning()<<e->mimeData()->text();
-        PIR->triggerApp("screen", "addWindow", "omxplayer");
         PIR->triggerApp("screen", "window", "0|stream:"+e->mimeData()->text());
         PIR->triggerApp("screen", "window", "0|play");
-        PIR->triggerApp("screen","window", "0|togglePause");
     }
 }
 
@@ -53,13 +72,11 @@ void DropArea::dropEvent(QDropEvent *e)
 void DropArea::mouseMoveEvent(QMouseEvent *e)
 {
     e->accept();
-    qWarning()<<"move!!!!!";
 }
 
 void DropArea::mousePressEvent(QMouseEvent *e)
 {
     e->accept();
-    qWarning()<<"click";
     PIR->triggerApp("screen","window", "0|togglePause");
 }
 

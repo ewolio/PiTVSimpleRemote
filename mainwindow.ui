@@ -17,8 +17,23 @@
    <layout class="QHBoxLayout" name="centralLayout">
     <item>
      <widget class="QSlider" name="volume">
+      <property name="minimum">
+       <number>-6</number>
+      </property>
+      <property name="maximum">
+       <number>3</number>
+      </property>
+      <property name="pageStep">
+       <number>1</number>
+      </property>
       <property name="orientation">
        <enum>Qt::Vertical</enum>
+      </property>
+      <property name="tickPosition">
+       <enum>QSlider::TicksAbove</enum>
+      </property>
+      <property name="tickInterval">
+       <number>1</number>
       </property>
      </widget>
     </item>

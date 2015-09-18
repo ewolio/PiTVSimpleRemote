@@ -4,6 +4,8 @@
 #include <QIcon>
 #include "piremote/piremote.h"
 #include <QObject>
+#include <QMenu>
+#include "configdialog.h"
 
 int main(int argc, char *argv[])
 {
@@ -11,15 +13,32 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     PIRemote::initRemote();
-    PIR->interface()->connectRemote("192.168.1.81", 31415, "PiTV");
+
+    ConfigDialog d;
+    d.connect(&d, SIGNAL(connectRemote(QString,quint16,QString)), PIR->interface(), SLOT(connectRemote(QString,quint16,QString)));
+    d.connect(&d, SIGNAL(disconnectRemote()), PIR->interface(), SLOT(disconnectRemote()));
+    d.connect(PIR->interface(), SIGNAL(disconnected()), &d, SLOT(remoteDisconnected()));
+    d.connect(PIR->interface(), SIGNAL(connected()), &d, SLOT(remoteConnected()));
 
 
 
 
-    QSystemTrayIcon* icon = new QSystemTrayIcon(&w);
-    icon->setIcon(QIcon("../../images/trayIcon.svg"));
-    icon->show();
-    w.connect(icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), &w, SLOT(show()));
+    QPixmap icon("images/trayIcon.png");
+    QPixmap iconGrayScale("images/trayIconDisconnected.png");
+
+    QSystemTrayIcon* systemBarIcon = new QSystemTrayIcon(iconGrayScale);
+
+    d.connect(PIR->interface(), &RemoteControlInterface::connected, [icon, systemBarIcon](){systemBarIcon->setIcon(icon);});
+    d.connect(PIR->interface(), &RemoteControlInterface::disconnected, [iconGrayScale, systemBarIcon](){systemBarIcon->setIcon(iconGrayScale);});
+
+    QMenu* m = new QMenu(&d);
+        m->addAction("Configuration", &d, SLOT(show()));
+
+    systemBarIcon->setContextMenu(m);
+
+    systemBarIcon->show();
+    w.connect(systemBarIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), &w, SLOT(toggleShow()));
+    w.connect(PIR->interface(), SIGNAL(disconnected()), &w, SLOT(close()));
 
 
 

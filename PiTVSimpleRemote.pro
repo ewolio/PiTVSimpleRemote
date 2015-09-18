@@ -10,15 +10,18 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = PiTVSimpleRemote
 TEMPLATE = app
-
+CONFIG += c++11
 
 SOURCES += main.cpp\
         mainwindow.cpp \
     piremote/piremote.cpp \
-    piremote/remoteapp.cpp
+    piremote/remoteapp.cpp \
+    configdialog.cpp
 
 HEADERS  += mainwindow.h \
     piremote/piremote.h \
-    piremote/remoteapp.h
+    piremote/remoteapp.h \
+    configdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    configdialog.ui

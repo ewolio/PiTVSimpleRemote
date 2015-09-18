@@ -123,6 +123,7 @@ void RemoteControlInterface::connectRemote(QString address, QString port, QStrin
 void RemoteControlInterface::connectRemote(QString address, quint16 port, QString name)
 {
     socket->connectToHost(address, port);
+    qWarning()<<"Connecting to: "<<address<<":"<<port<<" as "<<name;
     connexionTimer.singleShot(10000, this, SLOT(connexionTimeout()));
     this->name = name;
 }

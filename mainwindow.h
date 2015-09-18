@@ -18,6 +18,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void setGeneralVolume(int v);
+    void toggleShow();
+
 private:
     Ui::MainWindow *ui;
     DropArea* area;
@@ -34,17 +38,8 @@ public:
     // QWidget interface
 protected:
     void dropEvent(QDropEvent *e);
-
-    // QWidget interface
-protected:
     void mouseMoveEvent(QMouseEvent *);
-
-    // QWidget interface
-protected:
     void mousePressEvent(QMouseEvent *);
-
-    // QWidget interface
-protected:
     void dragEnterEvent(QDragEnterEvent *);
     void dragMoveEvent(QDragMoveEvent *);
 };
