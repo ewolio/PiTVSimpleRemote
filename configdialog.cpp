@@ -1,5 +1,6 @@
 #include "configdialog.h"
 #include "ui_configdialog.h"
+#include "piremote/piremote.h"
 
 ConfigDialog::ConfigDialog(QWidget *parent) :
     QDialog(parent),
@@ -29,6 +30,7 @@ void ConfigDialog::remoteConnected()
     ui->connectButton->setEnabled(true);
     ui->connectButton->setText("Disconnect");
     t->stop();
+    this->hide();
 }
 
 void ConfigDialog::remoteDisconnected()
@@ -41,6 +43,15 @@ void ConfigDialog::remoteDisconnected()
 
     if(!isVisible()&&autoConnect)
         t->start();
+}
+
+void ConfigDialog::systemTrayClicked()
+{
+    if(!PIR->interface()->isRemoteConnected())
+        if(isVisible())
+            hide();
+        else
+            show();
 }
 
 void ConfigDialog::connectButtonClicked()

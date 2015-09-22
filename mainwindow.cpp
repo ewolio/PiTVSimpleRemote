@@ -11,17 +11,16 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     setWindowFlags(Qt::FramelessWindowHint|Qt::WindowStaysOnTopHint);
-
     ui->setupUi(this);
-    setAcceptDrops(true);
-    area = new DropArea();
-    ui->centralLayout->addWidget(area);
 
-//    ui->volume->setRange(-6,3);
-//    ui->volume->setTickInterval(1);
-//    ui->volume->setTickPosition(QSlider::TicksLeft);
-//    ui->volume->setSingleStep(1);
-//    ui->volume->setValue(-1);
+    qmlView = new QQuickView();
+        QWidget* container = QWidget::createWindowContainer(qmlView, ui->mainFrame);
+        qmlView->setSource(QUrl("qrc:///qml/mainWindow.qml"));
+
+    QHBoxLayout *l = new QHBoxLayout(ui->mainFrame);
+        l->addWidget(container);
+        ui->mainFrame->setLayout(l);
+
     connect(ui->volume, SIGNAL(valueChanged(int)), this, SLOT(setGeneralVolume(int)));
 }
 
@@ -41,51 +40,4 @@ void MainWindow::toggleShow()
         hide();
     else if(PIR->interface()->isRemoteConnected())
         show();
-}
-
-DropArea::DropArea(): QFrame()
-{
-    setLineWidth(5);
-    setMidLineWidth(3);
-    setAcceptDrops(true);
-
-    setFrameShadow(QFrame::Raised);
-
-    QHBoxLayout *layout = new QHBoxLayout(this);
-        QLabel* text = new QLabel("Droppez ici!");
-        text->setAlignment(Qt::AlignHCenter);
-        layout->addWidget(text);
-}
-
-void DropArea::dropEvent(QDropEvent *e)
-{
-    e->accept();
-    e->acceptProposedAction();
-    if(e->mimeData()->hasText()){
-        qWarning()<<e->mimeData()->text();
-        PIR->triggerApp("screen", "window", "0|stream:"+e->mimeData()->text());
-        PIR->triggerApp("screen", "window", "0|play");
-    }
-}
-
-
-void DropArea::mouseMoveEvent(QMouseEvent *e)
-{
-    e->accept();
-}
-
-void DropArea::mousePressEvent(QMouseEvent *e)
-{
-    e->accept();
-    PIR->triggerApp("screen","window", "0|togglePause");
-}
-
-void DropArea::dragEnterEvent(QDragEnterEvent *e)
-{
-    e->acceptProposedAction();
-}
-
-void DropArea::dragMoveEvent(QDragMoveEvent *e)
-{
-    e->acceptProposedAction();
 }

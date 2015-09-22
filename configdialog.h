@@ -21,6 +21,8 @@ public slots:
     void remoteConnected();
     void remoteDisconnected();
 
+    void systemTrayClicked();
+
     void connectButtonClicked();
 signals:
     void connectRemote(QString hostname, quint16 port, QString name);

@@ -25,3 +25,8 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui \
     configdialog.ui
+
+DISTFILES += \
+    mainWindow.qml
+
+RESOURCES = ressources.qrc

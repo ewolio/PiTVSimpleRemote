@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file>mainWindow.qml</file>
+    </qresource>
+    <qresource prefix="/img">
+        <file alias="trayIconDisconnected">images/trayIconDisconnected.png</file>
+        <file alias="trayIcon">images/trayIcon.png</file>
+    </qresource>
+</RCC>

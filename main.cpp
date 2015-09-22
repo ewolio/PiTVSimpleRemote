@@ -10,7 +10,12 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
     MainWindow w;
+
+    QPixmap icon(":/img/trayIcon");
+    QPixmap iconGrayScale(":/img/trayIconDisconnected");
+    w.setWindowIcon(icon);
 
     PIRemote::initRemote();
 
@@ -23,13 +28,16 @@ int main(int argc, char *argv[])
 
 
 
-    QPixmap icon("images/trayIcon.png");
-    QPixmap iconGrayScale("images/trayIconDisconnected.png");
+    d.setWindowIcon(iconGrayScale);
 
     QSystemTrayIcon* systemBarIcon = new QSystemTrayIcon(iconGrayScale);
 
     d.connect(PIR->interface(), &RemoteControlInterface::connected, [icon, systemBarIcon](){systemBarIcon->setIcon(icon);});
     d.connect(PIR->interface(), &RemoteControlInterface::disconnected, [iconGrayScale, systemBarIcon](){systemBarIcon->setIcon(iconGrayScale);});
+//    d.connect(PIR->interface(), &RemoteControlInterface::connected, [icon, &d](){d->setWindowIcon(icon);});
+//    d.connect(PIR->interface(), &RemoteControlInterface::disconnected, [iconGrayScale, &d](){d->setWindowIcon(iconGrayScale);});
+    d.connect(systemBarIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), &d, SLOT(systemTrayClicked()));
+
 
     QMenu* m = new QMenu(&d);
         m->addAction("Configuration", &d, SLOT(show()));

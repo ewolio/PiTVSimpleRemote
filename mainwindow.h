@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QQuickView>
 #include <QMainWindow>
 #include <QFrame>
 
@@ -24,24 +25,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    DropArea* area;
+    QQuickView* qmlView;
 };
-
-class DropArea: public QFrame{
-    Q_OBJECT
-public:
-    explicit DropArea();
-
-
-
-
-    // QWidget interface
-protected:
-    void dropEvent(QDropEvent *e);
-    void mouseMoveEvent(QMouseEvent *);
-    void mousePressEvent(QMouseEvent *);
-    void dragEnterEvent(QDragEnterEvent *);
-    void dragMoveEvent(QDragMoveEvent *);
-};
-
 #endif // MAINWINDOW_H

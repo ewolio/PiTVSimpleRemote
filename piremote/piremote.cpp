@@ -14,8 +14,8 @@ void PIRemote::dataReceived(quint8 dataType, QByteArray data)
     switch(dataType){
         case CHAR:         //char*
             qWarning()<<data;
-            break;
-        case STRING:         //QString utf8
+            break;        case STRING:         //QString utf8
+
             qWarning()<<QString::fromUtf8(data);
             break;
     }
